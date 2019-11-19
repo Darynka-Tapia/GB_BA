@@ -1,0 +1,110 @@
+Set @fechaTermino = '2018-07-2';
+Set @fechaInicio = '2018-06-02';
+
+SELECT
+ROUND(((unix_timestamp(@fechaTermino) - unix_timestamp(@fechaInicio) ) /(24*60*60)-7+WEEKDAY(@fechaInicio)-WEEKDAY(@fechaTermino))/7)
+ + if(WEEKDAY(@fechaInicio) <= 6, 1, 0)
+ + if(WEEKDAY(@fechaTermino) >= 6, 1, 0)
+as diasDomingos ,
+
+ROUND(((unix_timestamp(@fechaTermino) - unix_timestamp(@fechaInicio) ) /(24*60*60)-7+WEEKDAY(@fechaInicio)-WEEKDAY(@fechaTermino))/7)
+ + if(WEEKDAY(@fechaInicio) <= 5, 1, 0)
+ + if(WEEKDAY(@fechaTermino) >= 5, 1, 0)
+as diasSabados
+
+SELECT DATEDIFF('2018-07-03', '2018-06-22') as dias
+                    from pruebafechas where DAYOFWEEK(fecha) <> 1
+
+
+create procedure Fechas @fechaInicio date, @fechaTermino
+	as 
+    	begin Declare @DiasRetardo int 
+        set @DiasRetardo = @fechaTermino - @fechaInicio;
+        PRINT 'Los dias de retardo son: ' + CAST(@DiasRetardo as VARCHAR(50))
+    END
+    GO
+    
+    EXECUTE Fechas 2018-06-22, 2018-07-03
+    GO
+
+
+
+
+
+
+
+
+
+alter procedure Fechas2 @fechaInicio date, @fechaTermino date
+	as 
+    	begin 
+		declare @retardo int;
+		SET @retardo = (SELECT DATEDIFF(day, @fechaTermino, @fechaInicio) as Dias from fechas)
+        PRINT 'Los dias de retardo son: '+ @retardo 
+    END
+    GO
+    
+    EXECUTE Fechas2 '2018-06-22', '2018-07-03'
+    GO
+
+
+select datepart(day, '2018-07-01')
+select datepart(day, '2018-07-02')
+select datepart(day, '2018-07-03')
+select datepart(day, '2018-07-04')
+select datepart(day, '2018-07-05')
+select datepart(day, '2018-07-06')
+select datepart(day, '2018-07-07')
+
+
+
+SELECT IF (DAYOFWEEK('2018-06-07')=1,
+    FLOOR(DATEDIFF('2018-07-03', '2018-06-07')) - FLOOR((DATEDIFF('2018-07-03', '2018-06-07')/7)),
+    FLOOR(DATEDIFF('2018-07-03', '2018-06-07')) - FLOOR((DATEDIFF('2018-07-03', '2018-06-07')/7))
+) AS TOTAL
+
+
+
+SELECT DATEDIFF(fechaTermino, fechaInicio ) as dias, (SELECT ROUND(((unix_timestamp(fechaTermino) - unix_timestamp(fechaInicio) ) /(24*60*60)-7+WEEKDAY(fechaInicio)-WEEKDAY(fechaTermino))/7)
+ + if(WEEKDAY(fechaInicio) <= 6, 1, 0)
+ + if(WEEKDAY(fechaTermino) >= 6, 1, 0)
+as diasDomingos)
++
+(SELECT ROUND(((unix_timestamp(fechaTermino) - unix_timestamp(fechaInicio) ) /(24*60*60)-7+WEEKDAY(fechaInicio)-WEEKDAY(fechaTermino))/7)
+ + if(WEEKDAY(fechaInicio) <= 5, 1, 0)
+ + if(WEEKDAY(fechaTermino) >= 5, 1, 0)
+as diasSabados) AS SumaSabadoDomingo
+
+
+
+
+Set @fechaTermino = '2018-07-03';
+Set @fechaInicio = '2018-06-24';
+select DATEDIFF(@fechaTermino, @fechaInicio ),
+(SELECT
+ROUND(((unix_timestamp(@fechaTermino) - unix_timestamp(@fechaInicio) ) /(24*60*60)-7+WEEKDAY(@fechaInicio)-WEEKDAY(@fechaTermino))/7)
+ + if(WEEKDAY(@fechaInicio) <= 6, 1, 0)
+ + if(WEEKDAY(@fechaTermino) >= 6, 1, 0)
+as diasDomingos)+(SELECT
+
+ROUND(((unix_timestamp(@fechaTermino) - unix_timestamp(@fechaInicio) ) /(24*60*60)-7+WEEKDAY(@fechaInicio)-WEEKDAY(@fechaTermino))/7)
+ + if(WEEKDAY(@fechaInicio) <= 5, 1, 0)
+ + if(WEEKDAY(@fechaTermino) >= 5, 1, 0)
+as diasSabados) AS SabadoDomingo
+
+
+
+
+
+
+
+
+SELECT (SELECT DATEDIFF(fechaTermino, fechaInicio ) - (SELECT ROUND(((unix_timestamp(fechaTermino) - unix_timestamp(fechaInicio) ) /(24*60*60)-7+WEEKDAY(fechaInicio)-WEEKDAY(fechaTermino))/7)
+ + if(WEEKDAY(fechaInicio) <= 6, 1, 0)
+ + if(WEEKDAY(fechaTermino) >= 6, 1, 0)
+as diasDomingos)
++
+(SELECT ROUND(((unix_timestamp(fechaTermino) - unix_timestamp(fechaInicio) ) /(24*60*60)-7+WEEKDAY(fechaInicio)-WEEKDAY(fechaTermino))/7)
+ + if(WEEKDAY(fechaInicio) <= 5, 1, 0)
+ + if(WEEKDAY(fechaTermino) >= 5, 1, 0)
+as diasSabados) AS SumaSabadoDomingo) AS DiasHabiles

@@ -1,0 +1,2 @@
+SELECT DATEDIFF('2018-06-25', fecha) as dias
+from pruebafechas
